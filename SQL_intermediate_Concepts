@@ -1,0 +1,287 @@
+CREATE DATABASE COLLEGE;
+USE COLLEGE;
+CREATE TABLE Class(
+	student_name VARCHAR(20),
+    marks INT,
+    phone CHAR(10),
+    dob DATE
+);
+
+INSERT INTO Class VALUES
+("Hemanth" , 76 , "9182196516" , "2001-09-14"),
+("Pavan" , 90 , "8497986764" , "2000-01-11");
+
+SELECT * FROM Class;
+
+-- is we want to insert particular column values in tables
+
+INSERT INTO Class(student_name , marks)
+VALUES
+("Ram Mohan" , 80),
+("Saraswathi" , 99);
+
+/*
+Constraints-
+1.Unique
+2.NotNull
+3.Primary
+4.Foriegn
+5.check
+6.Defalut
+
+*/
+CREATE TABLE A(
+	name VARCHAR(20) NOT NULL,
+    phone_number CHAR(10) UNIQUE
+    
+);
+
+INSERT INTO A VALUES
+('HEMANTH' , '9182196516'),
+('HEMANTH' , '8497986764');
+
+select * from A;
+
+-- PRIMARY KEY AND FOREIGN KEY
+CREATE TABLE JAFFA(
+	Student_Roll INT PRIMARY KEY,
+    student_name VARCHAR(50) NOT NULL,
+    marks INT
+);
+
+INSERT INTO JAFFA
+VALUES
+(1 , 'Hemanth' , 76),
+(2 , 'Pravallika' , 77),
+(3 , 'Pavan' , 65);
+
+SELECT * FROM JAFFA;
+
+-- Data Manipulation 
+-- update
+UPDATE JAFFA
+SET student_name = 'Rajesh' , marks = 90
+WHERE Student_Roll = 1;
+-- Delete
+DELETE FROM JAFFA
+WHERE student_roll = 1;
+USE COLLEGE;
+SELECT * FROM JAFFA;
+
+
+-- TRANSACTION IN MYSQL
+begin;
+INSERT INTO JAFFA
+VALUES
+(1 , 'HEMANTH' , 76);
+
+SELECT * FROM JAFFA;
+-- ROLLBACK.   THIS IS USED TO UNDO THE CHANGES	
+COMMIT;
+
+CREATE TABLE worker (
+    worker_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    joining_date DATE
+);
+
+INSERT INTO worker (worker_id, first_name, last_name, department, salary, joining_date) VALUES
+(1, 'Amit', 'Sharma', 'HR', 45000.00, '2021-01-15'),
+(2, 'Neha', 'Verma', 'IT', 60000.00, '2020-06-10'),
+(3, 'Rahul', 'Mehta', 'Finance', 55000.00, '2019-03-25'),
+(4, 'Priya', 'Singh', 'IT', 65000.00, '2022-07-01'),
+(5, 'Arjun', 'Patel', 'Marketing', 48000.00, '2021-11-12'),
+(6, 'Sneha', 'Iyer', 'HR', 47000.00, '2020-02-18'),
+(7, 'Vikas', 'Gupta', 'Finance', 58000.00, '2018-09-30'),
+(8, 'Ananya', 'Rao', 'IT', 70000.00, '2023-01-05'),
+(9, 'Karan', 'Malhotra', 'Sales', 52000.00, '2019-12-20'),
+(10, 'Pooja', 'Nair', 'Marketing', 50000.00, '2022-04-14');
+
+SELECT * FROM worker;
+
+-- Clasues
+-- SELECT AND FROM
+
+SELECT first_name , last_name
+FROM worker;
+
+-- Where clause (Condition)
+
+SELECT * FROM worker
+WHERE salary > 50000.00;
+
+-- USING MONTH METHOD.   to get the month from date we use MONTH(date)
+SELECT * FROM worker
+WHERE MONTH(joining_date) BETWEEN 1 AND 4;
+
+-- in operator. (works as a or operator)
+
+SELECT *
+FROM worker
+WHERE department IN('hr' , 'SALES');
+
+-- question - worker details whore salary is > 50k and department is either hr or it department
+
+SELECT * 
+FROM worker
+WHERE salary > 50000.00 and department IN('HR' , 'IT');
+
+-- ORDER BY (Sorting in ascending or descending )
+
+SELECT * 
+FROM worker
+ORDER BY SALARY DESC;
+
+SELECT *
+FROM worker;
+
+-- DATE FUNCTIONS
+-- DATEPART
+
+SELECT *,
+DAY(joining_date) AS join_day
+FROM worker;
+
+-- GROUP BY
+SELECT department , SUM(salary)
+FROM worker
+GROUP BY department;
+
+-- GROUP_CONCAT.  (EXAMPLE - used when we need all the people working in particular sector)
+SELECT department , GROUP_CONCAT(FIRST_NAME , ',')
+FROM worker
+GROUP BY department;
+
+
+-- question[ we need to find out the department wise total salary and number of workers]
+SELECT department , SUM(SALARY) , COUNT(WORKER_ID)
+FROM worker
+GROUP BY department;
+
+-- question[ we need to find out the department wise total salary and number of workers WHOSE SALARY IS > 50K]
+SELECT department , SUM(SALARY) , COUNT(worker_id)
+FROM worker
+WHERE salary > 50000
+GROUP BY department;
+
+-- question[ we need to find out the department wise total salary and number of workers WHOSE SALARY IS > 50K and count > 2]
+SELECT department , SUM(SALARY) , COUNT(worker_id)
+FROM worker
+WHERE salary > 50000 and COUNT(worker_id) >= 2   -- in where we cannot give conditions on aggregate columns [thats is where we use having]
+GROUP BY department;
+
+-- Having [ to give conditions/ use conditions on aggregate columns we use having]
+-- Exmaple
+-- question[ we need to find out the department wise total salary and number of workers WHOSE SALARY IS > 50K and count > 2]
+SELECT department , SUM(salary) , COUNT(worker_id)
+FROM worker
+WHERE salary > 50000
+GROUP BY department
+HAVING COUNT(worker_id ) >= 2;
+
+-- question [ we need those workers whose salary is > 60K and we need have those departments whose count is >= 2]
+SELECT department , COUNT(worker_id)
+FROM worker
+WHERE salary > 60000
+GROUP BY department
+HAVING COUNT(worker_id) >= 2;
+
+
+/*
+question
+number of worker joined in each month
+salary > 15000
+months where count > 2
+order them by count desc
+*/
+SELECT MONTHNAME(joining_date) AS Month , COUNT(worker_id) AS Number
+FROM worker
+WHERE salary > 20000
+GROUP BY MONTHNAME(joining_date)
+HAVING COUNT(worker_id) >= 2
+ORDER BY COUNT(worker_id) DESC;	
+
+-- Like 
+-- name starts with a?
+SELECT *
+FROM worker
+WHERE first_name LIKE 'a%';
+
+-- name end with a?
+SELECT *
+FROM worker
+WHERE first_name LIKE '%a'; 
+
+-- names that consists of a in any position
+SELECT *
+FROM worker
+WHERE first_name LIKE '%a%'; 
+
+-- name starts with 'm' and end with 'a'?
+SELECT *
+FROM worker
+WHERE last_name LIKE 'm%' AND last_name LIKE '%a';
+
+--        or 
+
+SELECT *
+FROM worker
+WHERE last_name LIKE 'm%a';
+
+-- question
+-- print all the names with end with vowels?
+SELECT *
+FROM worker
+WHERE last_name LIKE '%[Aeiou]';   -- this will not work in mysql
+
+
+-- regular expression will work in my sql
+-- $ acts as % in REGEXP
+SELECT *
+FROM worker
+WHERE last_name REGEXP '[aeiouAEIOU]$';
+
+-- question
+-- want all the workers whose last name 2nd charcter is 'a'?
+SELECT *
+FROM worker
+WHERE last_name Like '_a%';   -- _ means one character
+
+-- SubString
+/*
+SUBSTRING SYNTAX
+SELECT *, SUBSTRING(column/String , Starting_index , Ending_index)
+*/
+/*
+To find the index of anything 
+we can use character index
+Syntax
+LOCATE('LETTER/SPACE/WHAT WE WANT' , COLUMN NAME);
+
+*/
+
+-- to find the index 
+SELECT *, LOCATE('M' , first_name)
+FROM worker;
+
+-- question. Number of workers working in each department and salary > 50k
+
+SELECT department , COUNT(worker_id) AS COUNT_WORKER
+FROM worker
+WHERE salary > 50000
+GROUP BY department;
+
+
+
+
+
+
+
+
+
+
+
+
