@@ -1,0 +1,132 @@
+/*
+🟢 Basic SQL Questions
+
+Write a query to display all workers.
+
+Fetch first_name and last_name of workers from the IT department.
+
+Find distinct departments from the worker table.
+
+Display workers whose salary is greater than 50,000.
+
+Find workers who joined after 2021.
+
+Show workers whose first name starts with 'A'.
+
+Fetch workers whose last name ends with a vowel.
+
+Count the total number of workers.
+
+🟡 Intermediate SQL Questions
+
+Find the highest salary in the company.
+
+Find the second highest salary.
+
+Display department-wise average salary.
+
+Find the number of workers in each department.
+
+Show workers who belong to HR or IT.
+
+Display workers whose salary is between 45,000 and 60,000.
+
+Find workers who joined in the year 2020.
+
+Fetch workers whose last name’s second character is ‘a’.
+
+Display the top 3 highest paid workers.
+
+Find workers whose first name contains exactly 5 characters.
+
+
+*/
+
+CREATE DATABASE practice;
+USE  practice;
+CREATE TABLE worker (
+    worker_id INT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    joining_date DATE
+);
+
+INSERT INTO worker (worker_id, first_name, last_name, department, salary, joining_date) VALUES
+(1, 'Amit', 'Sharma', 'HR', 45000.00, '2021-01-15'),
+(2, 'Neha', 'Verma', 'IT', 60000.00, '2020-06-10'),
+(3, 'Rahul', 'Mehta', 'Finance', 55000.00, '2019-03-25'),
+(4, 'Priya', 'Singh', 'IT', 65000.00, '2022-07-01'),
+(5, 'Arjun', 'Patel', 'Marketing', 48000.00, '2021-11-12'),
+(6, 'Sneha', 'Iyer', 'HR', 47000.00, '2020-02-18'),
+(7, 'Vikas', 'Gupta', 'Finance', 58000.00, '2018-09-30'),
+(8, 'Ananya', 'Rao', 'IT', 70000.00, '2023-01-05'),
+(9, 'Karan', 'Malhotra', 'Sales', 52000.00, '2019-12-20'),
+(10, 'Pooja', 'Nair', 'Marketing', 50000.00, '2022-04-14'),
+(11, 'Rohit', 'Kapoor', 'IT', 62000.00, '2021-08-19'),
+(12, 'Simran', 'Kaur', 'HR', 46000.00, '2019-05-23'),
+(13, 'Ajay', 'Joshi', 'Finance', 59000.00, '2020-10-11'),
+(14, 'Kavya', 'Menon', 'Sales', 54000.00, '2021-03-29'),
+(15, 'Suresh', 'Reddy', 'IT', 68000.00, '2018-01-17'),
+(16, 'Divya', 'Agarwal', 'Marketing', 51000.00, '2022-09-05'),
+(17, 'Manish', 'Bansal', 'Finance', 61000.00, '2019-07-08'),
+(18, 'Nikhil', 'Chopra', 'Sales', 53000.00, '2020-12-02'),
+(19, 'Isha', 'Pandey', 'HR', 49000.00, '2023-02-10'),
+(20, 'Tarun', 'Khanna', 'IT', 72000.00, '2022-05-26');
+
+SELECT *
+FROM worker;
+
+-- Write a query to display all workers.
+SELECT *
+FROM worker;
+
+-- Fetch first_name and last_name of workers from the IT department.
+SELECT first_name , last_name 
+FROM worker
+WHERE department = 'IT';
+
+-- Find distinct departments from the worker table.
+SELECT DISTINCT(department)
+FROM worker;
+
+-- Display workers whose salary is greater than 50,000.
+SELECT *
+FROM worker
+WHERE salary > 50000;
+
+-- Find workers who joined after 2021.
+SELECT *
+FROM worker
+WHERE YEAR(joining_date) > 2021;
+
+-- Show workers whose first name starts with 'A'.
+SELECT *
+FROM worker
+WHERE first_name LIKE 'a%';
+
+-- Fetch workers whose last name ends with a vowel.
+SELECT *
+FROM worker
+WHERE last_name REGEXP '[AEIOUaeiou]$';
+
+-- Count the total number of workers.
+SELECT COUNT(worker_id) AS No_of_workers
+FROM worker;
+
+-- Find the highest salary in the company.
+SELECT MAX(salary)
+FROM worker;
+
+
+
+
+
+
+
+
+
+
+
+
