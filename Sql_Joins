@@ -1,0 +1,257 @@
+Create database JOINS_PRAGYA;
+use JOINS_PRAGYA;
+CREATE TABLE worker (
+    workerid INT,
+    firstname VARCHAR(50),
+    lastname VARCHAR(50),
+    salary DECIMAL(10,2),
+    joiningdate DATE,
+    department VARCHAR(50)
+);
+INSERT INTO worker (workerid, firstname, lastname, salary, joiningdate, department) VALUES
+(1, 'Amit', 'Sharma', 45000.00, '2021-01-15', 'HR'),
+(2, 'Neha', 'Verma', 60000.00, '2020-06-10', 'IT'),
+(3, 'Rahul', 'Mehta', 55000.00, '2019-03-25', 'Finance'),
+(4, 'Priya', 'Singh', 65000.00, '2022-07-01', 'IT'),
+(5, 'Arjun', 'Patel', 48000.00, '2021-11-12', 'Marketing'),
+(6, 'Sneha', 'Iyer', 47000.00, '2020-02-18', 'HR'),
+(7, 'Vikas', 'Gupta', 58000.00, '2018-09-30', 'Finance'),
+(8, 'Ananya', 'Rao', 70000.00, '2023-01-05', 'IT'),
+(9, 'Karan', 'Malhotra', 52000.00, '2019-12-20', 'Sales'),
+(10, 'Pooja', 'Nair', 50000.00, '2022-04-14', 'Marketing');
+
+Select * from worker;
+
+CREATE TABLE Project1 (
+    projectid INT PRIMARY KEY,
+    workerid INT,
+    projectname VARCHAR(100)
+);
+INSERT INTO Project1 (projectid, workerid, projectname) VALUES
+(101, 1, 'HR Management System'),
+(102, 2, 'Employee Portal'),
+(103, 3, 'Finance Analytics'),
+(104, 4, NULL),
+(105, 5, 'Marketing Campaign Automation'),
+(106, 6, 'Recruitment Tracking'),
+(107, 7, 'Budget Planning Tool'),
+(108, 8, NULL),
+(109, 9, 'Sales CRM'),
+(110, 10, 'Brand Promotion Platform');
+Select * from Project1;
+
+SELECT worker.workerid , Project1.workerid
+FROM worker INNER JOIN Project1
+ON worker.workerid = Project1.workerid;
+
+
+-- Inner Join
+-- is we want the first_name and project name then we can use inner join and do that
+
+SELECT w.firstname , p.projectname ,w.workerid
+FROM worker AS w INNER JOIN Project1 AS p
+ON w.workerid = p.workerid;
+
+
+-- Left Join
+-- gives Common records[Inner join] + all the remaining records from left table
+
+SELECT w.firstname , p.projectname
+FROM Project1 as p LEFT JOIN worker AS w 
+ON w.workerid = p.workerid
+WHERE p.projectname is NOT NULL;
+
+-- Full join in Mysql full join is not there
+
+-- syntax for SQL
+-- SELECT w.firstname , p.projectname
+-- FROM Project1 as p FULL JOIN worker AS w 
+-- ON w.workerid = p.workerid;
+
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    department VARCHAR(50)
+);
+
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY,
+    emp_id INT,
+    project_name VARCHAR(50)
+);
+
+INSERT INTO employees VALUES
+(1, 'Amit', 'HR'),
+(2, 'Neha', 'IT'),
+(3, 'Rahul', 'Finance'),
+(4, 'Sneha', 'IT'),
+(5, NULL, 'HR'),          -- NULL name
+(6, 'John', NULL),        -- NULL department
+(7, 'Priya', 'HR'),
+(8, 'Neha', 'IT'),        -- duplicate name
+(9, 'Amit', NULL),        -- duplicate name + NULL dept
+(10, 'Rohit', 'Marketing'),
+(11, NULL, NULL),         -- fully NULL fields
+(12, 'Kiran', 'Finance');
+
+INSERT INTO projects VALUES
+(101, 1, 'Payroll'),
+(102, 2, 'Website'),
+(103, 2, 'Website'),        -- duplicate project
+(104, 3, 'Audit'),
+(105, 3, NULL),             -- NULL project name
+(106, 4, 'Migration'),
+(107, 4, 'Migration'),      -- duplicate row scenario
+(108, 8, 'Support'),
+(109, NULL, 'Unassigned'),  -- NULL emp_id
+(110, 15, 'Ghost Project'), -- no matching employee
+(111, 6, NULL),             -- NULL project name
+(112, 6, 'Infra Setup');
+
+
+SELECT e.emp_id , p.project_id
+FROM projects as p LEFT JOIN employees AS e
+ON e.emp_id = p.project_id
+WHERE p.project_name is NULL;
+
+-- full join in mysql (simulation)
+-- in mysql we do not have full join so we can use union
+
+SELECT *
+FROM employees e
+LEFT JOIN projects p
+ON e.emp_id = p.emp_id
+
+UNION
+
+SELECT *
+FROM employees e
+RIGHT JOIN projects p
+ON e.emp_id = p.emp_id;
+
+-- -------------------------------------
+
+
+-- Self joins
+-- in self join we consider same table 2 times and we perform joins on the interlinked columns
+
+
+CREATE TABLE employees_self (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    department VARCHAR(50),
+    manager_id INT
+);
+
+INSERT INTO employees_self VALUES
+(1, 'Amit', 'HR', NULL),     -- top manager
+(2, 'Neha', 'IT', 1),
+(3, 'Rahul', 'Finance', 1),
+(4, 'Sneha', 'IT', 2),
+(5, 'Kiran', 'HR', 2),
+(6, 'John', 'Admin', 3),
+(7, 'Priya', 'HR', 3),
+(8, 'Neha', 'IT', 4),        -- duplicate name
+(9, 'Amit', NULL, 4),        -- duplicate name + NULL dept
+(10, 'Rohit', 'Marketing', 20); -- invalid manager (orphan)
+
+Select * from employees_self;	
+
+-- innner join in self join
+
+SELECT a.emp_name , b.emp_name AS manager_name
+FROM employees_self a JOIN employees_self b
+ON a.manager_id = b.emp_id;
+
+-- question. employees who belong to same city
+
+CREATE TABLE example_emp (
+    name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+INSERT INTO example_emp VALUES
+('Amit', 'Bangalore'),
+('Neha', 'Hyderabad'),
+('Rahul', 'Bangalore'),
+('Sneha', 'Chennai'),
+('Kiran', 'Hyderabad'),
+('Priya', 'Bangalore'),
+('Neha', 'Chennai'),     -- duplicate name
+('Amit', NULL),          -- NULL city
+('John', 'Delhi'),
+(NULL, 'Delhi');         -- NULL name
+
+SELECT a.name , b.name , a.city
+FROM example_emp a JOIN example_emp b
+ON a.city = b.city
+WHERE a.name < b.name;  -- we will get all the employees who belong to same city
+
+-- question. cummulative sum(sum of current and above values)
+CREATE TABLE transactions (
+    id INT PRIMARY KEY,
+    amount INT
+);
+INSERT INTO transactions VALUES
+(1, 100),
+(2, 250),
+(3, 75),
+(4, 0),
+(5, 500);
+
+SELECT b.id , SUM(a.amount) as sum
+FROM transactions a JOIN transactions b
+ON a.id <= b.id
+GROUP BY b.id;
+
+-- question 
+
+SELECT b.id
+FROM transactions a JOIN transactions b
+ON a.id <= b.id
+ORDER BY b.id ;
+
+-- 
+CREATE TABLE employee (
+    empid INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT
+);
+INSERT INTO employee VALUES
+(1, 'Amit', 'HR', 50000),
+(2, 'Neha', 'IT', 70000),
+(3, 'Rahul', 'Finance', 60000),
+(4, 'Sneha', 'IT', 70000),     -- same salary as Neha
+(5, 'Kiran', 'HR', 50000),     -- same salary as Amit
+(6, 'John', 'Admin', 45000),
+(7, 'Priya', 'HR', 55000),
+(8, 'Vikram', 'Finance', 60000), -- same salary as Rahul
+(9, 'Anjali', 'IT', 75000),
+(10, 'Rohit', 'Marketing', 45000), -- same salary as John
+(11, 'Suresh', 'IT', 75000),    -- same salary as Anjali
+(12, 'Meena', 'Finance', 55000); -- same salary as Priya
+
+-- question Employees having same salary
+SELECT  a.salary,a.emp_name ,  b.emp_name 
+FROM employee a JOIN employee b
+ON a.salary = b.salary
+WHERE a.empid > b.empid;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
