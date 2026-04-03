@@ -1,0 +1,39 @@
+/*
+intro to sql and its syntax
+*/
+CREATE DATABASE Portal;
+use Portal;
+CREATE TABLE customers (
+customer_id INT PRIMARY KEY,
+customer_name VARCHAR(255),
+country VARCHAR(255),
+device VARCHAR(255),
+money_spent int
+);
+
+INSERT INTO customers (customer_id, customer_name, country, device, money_spent)
+VALUES
+(1, 'Alice Smith', 'USA', 'Android', 450),
+(2, 'Hiroshi Tanaka', 'Japan', 'iOS', 500),
+(3, 'Amara Diop', 'Senegal','iOS', 2000),
+(4, 'John Smith', 'Germany','Android', 200),
+(5, 'Tanjiro', 'Japan','iOS',600),
+(6, 'Rohan', 'India','iOS', 45);
+-- print the whole table we use this command
+SELECT * FROM customers;
+
+-- this is how we use where condition in SQL
+SELECT customer_name , money_spent,device FROM customers
+WHERE device = 'iOS';
+
+-- Order by is used to filter the table in ASC or desc
+
+SELECT * FROM customers
+WHERE device = 'iOS'
+ORDER BY money_spent DESC;
+
+SELECT * FROM customers
+WHERE device = 'iOS'
+ORDER BY money_spent ASC;
+
+
