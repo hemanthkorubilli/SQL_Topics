@@ -1,0 +1,120 @@
+-- Case when
+Create database Pragya_case_when;
+use Pragya_case_when;
+CREATE TABLE students (
+    Student_name VARCHAR(50),
+    Section CHAR(1),
+    Sql_marks INT,
+    Sql_pass_fail VARCHAR(10),
+    Excel_marks INT,
+    Excel_pass_fail VARCHAR(10),
+    Python_marks INT,
+    Python_pass_fail VARCHAR(10),
+    Joining_date DATE,
+    Leaving_date DATE
+);
+INSERT INTO students VALUES
+('Amit', 'A', 85, 'Pass', 78, 'Pass', 90, 'Pass', '2023-01-10', NULL),
+('Neha', 'A', 45, 'Fail', 60, 'Pass', 72, 'Pass', '2023-02-15', NULL),
+('Rahul', 'B', 55, 'Pass', 48, 'Fail', 65, 'Pass', '2023-03-01', '2024-01-10'),
+('Sneha', 'B', 92, 'Pass', 88, 'Pass', 95, 'Pass', '2023-01-20', NULL),
+('Kiran', 'A', 30, 'Fail', 40, 'Fail', 35, 'Fail', '2023-04-05', '2023-10-01'),
+('Priya', 'C', 75, 'Pass', 82, 'Pass', 68, 'Pass', '2023-05-10', NULL),
+('John', 'C', 60, 'Pass', 55, 'Pass', 45, 'Fail', '2023-06-12', NULL),
+('Anjali', 'A', 88, 'Pass', 91, 'Pass', 85, 'Pass', '2023-07-01', NULL),
+('Vikram', 'B', 50, 'Pass', 49, 'Fail', 52, 'Pass', '2023-08-18', NULL),
+('Rohit', 'C', 20, 'Fail', 35, 'Fail', 40, 'Fail', '2023-09-25', '2024-02-01'),
+('Meena', 'A', 70, 'Pass', 65, 'Pass', 60, 'Pass', '2023-10-10', NULL),
+('Suresh', 'B', 95, 'Pass', 89, 'Pass', 93, 'Pass', '2023-11-15', NULL);
+
+-- Categorization with case when
+-- using case when for categorization 
+
+SELECT student_name , sql_marks,
+CASE WHEN sql_marks > 80 THEN 'A'
+WHEN sql_marks >60 THEN 'B'
+WHEN sql_marks >40 THEN 'C'
+ELSE 'D' END as grade
+FROM students;
+
+-- question 
+/*
+all subjects pass --  excellent
+sql, python pass -- work hard in excel
+excel , python pass -- work hadr in sql
+excel , sql pass -- work hadr in python
+for the rest need improvement
+*/
+
+SELECT student_name,
+CASE WHEN sql_pass_fail = 'Pass' AND excel_pass_fail = 'Pass' AND python_pass_fail = 'Pass' THEN 'EXCELLENT'
+WHEN sql_pass_fail = 'Pass' AND excel_pass_fail = 'Pass' THEN 'Improve in Python'
+WHEN excel_pass_fail = 'Pass' AND python_pass_fail = 'Pass' THEN 'Improve in SQL'
+WHEN sql_pass_fail = 'Pass' AND python_pass_fail = 'Pass' THEN 'Improve in excel'
+ELSE 'NEDDED IMPROVEMENT' END as comment
+FROM students;
+
+-- NESTED CASE WHEN
+-- question
+/*
+if student is sql Pass --
+if marks >= 80 then 'Above average' else 'Average'
+if student is sql fail--
+then 'work hard'
+*/
+SELECT student_name , sql_pass_fail , sql_marks,
+CASE WHEN sql_pass_fail = 'Pass' THEN 
+(CASE WHEN sql_marks >= 80 THEN 'ABOVE AVERAGE' ELSE 'AVEARGE' END)
+ELSE 'FAIL' END as Comment
+FROM students;
+
+
+-- case when in aggregate functions
+-- aggregate function (any functions that reduce the lines of output is called an aggregate function)
+-- aggregate functions (sum,count,avg,min,max)
+
+SELECT COUNT(CASE WHEN sql_pass_fail = 'Pass' THEN student_name END)
+FROM students;
+
+-- count all the 3 exams pass count in 3 colums
+
+SELECT COUNT(CASE WHEN sql_pass_fail  = 'pass' THEN student_name END) AS SQL_COUNT,
+COUNT(CASE WHEN python_pass_fail = 'pass' THEN student_name END) AS PYHTON_COUNT,
+COUNT(CASE WHEN excel_pass_fail = 'pass' THEN student_name END) AS EXCEL_COUNT
+FROM students;
+
+
+-- particular name should be in top and the rest should be in asc
+
+SELECT student_name
+FROM students
+ORDER BY CASE 
+	WHEN Student_name = 'Meena' THEN 0 
+	ELSE 2 
+END, Student_name;
+
+
+-- particular name in bottom and other in asc
+
+SELECT student_name
+FROM students
+ORDER BY CASE
+	WHEN student_name = 'Meena' THEN 1
+    ELSE 0
+END , student_name;
+
+-- names start with particular letter should be in top and other names should be in decending order
+
+SELECT student_name
+FROM students
+ORDER BY CASE
+	WHEN student_name LIKE 'p%' THEN 0
+    ELSE 1
+END , student_name DESC;
+
+Select * from students;
+
+
+
+
+
