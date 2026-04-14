@@ -1,0 +1,94 @@
+-- CTE. common table expression
+create database worker;
+use worker;
+CREATE TABLE worker (
+    workerid INT,
+    firstname VARCHAR(50),
+    lastname VARCHAR(50),
+    salary DECIMAL(10,2),
+    joiningdate DATE,
+    department VARCHAR(50)
+);
+INSERT INTO worker (workerid, firstname, lastname, salary, joiningdate, department) VALUES
+(1, 'Amit', 'Sharma', 45000.00, '2021-01-15', 'HR'),
+(2, 'Neha', 'Verma', 60000.00, '2020-06-10', 'IT'),
+(3, 'Rahul', 'Mehta', 55000.00, '2019-03-25', 'Finance'),
+(4, 'Priya', 'Singh', 65000.00, '2022-07-01', 'IT'),
+(5, 'Arjun', 'Patel', 48000.00, '2021-11-12', 'Marketing'),
+(6, 'Sneha', 'Iyer', 47000.00, '2020-02-18', 'HR'),
+(7, 'Vikas', 'Gupta', 58000.00, '2018-09-30', 'Finance'),
+(8, 'Ananya', 'Rao', 70000.00, '2023-01-05', 'IT'),
+(9, 'Karan', 'Malhotra', 52000.00, '2019-12-20', 'Sales'),
+(10, 'Pooja', 'Nair', 50000.00, '2022-04-14', 'Marketing');
+
+-- question select all the workers whose salary is greater than the average salary of the salary
+SELECT *
+FROM worker
+WHERE salary > AVG(salary);      -- this will not work as we cannot use aggregate functuons in where 
+-- This is where we use CTE
+
+
+WITH cte AS(
+	SELECT AVG(salary) AS Average
+    FROM worker
+)
+SELECT *
+FROM worker , cte
+WHERE salary > Average;
+
+-- all the workers whise salary is > avg salary and by department wise
+
+with cte as(
+	select department , avg(salary) as average
+    from worker
+    group by department
+)
+select *
+from worker join cte
+on worker.department = cte.department
+where salary > average;
+
+-- second highest salary using cte
+
+WITH cte AS(
+	SELECT MAX(salary) AS Maximum
+    FROM worker
+)
+SELECT MAX(salary)
+FROM worker, cte
+WHERE salary < maximum;
+
+-- 3rd highest salary using cte
+WITH cte AS(
+	SELECT MAX(salary) AS Maximum
+    FROM worker
+), cte2 AS(
+	SELECT MAX(salary) AS secondMaximum
+    FROM cte,worker
+    where salary < Maximum
+)
+select max(salary)
+from worker,cte2
+where salary < secondMaximum;
+
+-- department names whose total salary is > average salary
+
+with cte as(
+	select department , sum(salary) as Total
+    from worker
+    group by department
+), cte2 as(
+	select avg(Total) as Average
+    from cte	
+)
+select *
+from cte,cte2
+where Total > average;
+
+
+
+
+
+
+
+
