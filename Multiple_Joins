@@ -1,0 +1,91 @@
+Create database MultipleJoins;
+use multiplejoins;
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    city VARCHAR(50),
+    country VARCHAR(50)
+);
+
+INSERT INTO customers VALUES
+(101, 'John Smith', 'New York', 'USA'),
+(102, 'Emma Wilson', 'Chicago', 'USA'),
+(103, 'Raj Kumar', 'Mumbai', 'India'),
+(104, 'Sophia Brown', 'London', 'UK'),
+(105, 'Michael Lee', 'Toronto', 'Canada'),
+(106, 'Olivia Davis', 'Sydney', 'Australia'),
+(107, 'David Miller', 'Berlin', 'Germany'),
+(108, 'Ava Taylor', 'Paris', 'France');
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    department VARCHAR(50)
+);
+
+INSERT INTO employees VALUES
+(201, 'Alice Johnson', 'Sales'),
+(202, 'Bob Anderson', 'Sales'),
+(203, 'Charlie White', 'Sales'),
+(204, 'Diana Green', 'Sales'),
+(205, 'Ethan Clark', 'Sales');
+
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    category VARCHAR(50),
+    price DECIMAL(10,2)
+);
+
+INSERT INTO products VALUES
+(301, 'Laptop', 'Electronics', 800.00),
+(302, 'Mobile Phone', 'Electronics', 500.00),
+(303, 'Headphones', 'Accessories', 100.00),
+(304, 'Keyboard', 'Accessories', 50.00),
+(305, 'Monitor', 'Electronics', 250.00),
+(306, 'Mouse', 'Accessories', 30.00),
+(307, 'Printer', 'Office', 150.00),
+(308, 'Webcam', 'Accessories', 80.00);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    product_id INT,
+    employee_id INT,
+    quantity INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+INSERT INTO orders VALUES
+(1001, 101, 301, 201, 1, '2025-01-10'),
+(1002, 102, 302, 202, 2, '2025-01-12'),
+(1003, 103, 303, 203, 3, '2025-01-15'),
+(1004, 101, 304, 201, 2, '2025-01-18'),
+(1005, 104, 305, 204, 1, '2025-01-20'),
+(1006, 105, 306, 205, 5, '2025-01-22'),
+(1007, 106, 307, 202, 2, '2025-01-25'),
+(1008, 107, 308, 203, 1, '2025-01-28'),
+(1009, 103, 301, 204, 1, '2025-02-01'),
+(1010, 108, 302, 205, 2, '2025-02-03'),
+(1011, 101, 303, 201, 4, '2025-02-05'),
+(1012, 104, 305, 202, 2, '2025-02-07'),
+(1013, 105, 308, 203, 3, '2025-02-09'),
+(1014, 102, 306, 204, 6, '2025-02-10'),
+(1015, 107, 304, 205, 2, '2025-02-12');
+
+-- Question
+-- Retrive the list of all data from orders along with the related customer, product , employee.
+
+select o.order_id , o.product_id, c.customer_name , p.product_name , e.employee_name
+from orders o 
+left join customers c
+on o.customer_id = c.customer_id
+left join products p
+on o.product_id = p.product_id
+left join employees e
+on o.employee_id = e.employee_id;
+
