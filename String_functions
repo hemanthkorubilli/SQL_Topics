@@ -1,0 +1,96 @@
+Create database String_functions;
+use string_functions;
+
+CREATE TABLE customer_addresses (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    pincode VARCHAR(10),
+    address VARCHAR(255)
+);
+
+INSERT INTO customer_addresses
+(customer_id, first_name, last_name, pincode, address)
+VALUES
+(1, 'John', 'Smith', '560001', '12 MG Road, Bengaluru'),
+(2, 'Emily', 'Johnson', '110001', '45 Connaught Place, New Delhi'),
+(3, 'Michael', 'Brown', '400001', '78 Marine Drive, Mumbai'),
+(4, 'Sarah', 'Davis', '600001', '21 Anna Salai, Chennai'),
+(5, 'David', 'Wilson', '700001', '10 Park Street, Kolkata'),
+(6, 'Priya', 'Sharma', '380001', '5 CG Road, Ahmedabad'),
+(7, 'Rahul', 'Patel', '395003', '102 Ring Road, Surat'),
+(8, 'Anjali', 'Verma', '302001', '44 MI Road, Jaipur'),
+(9, 'Robert', 'Miller', '226001', '88 Hazratganj, Lucknow'),
+(10, 'Jessica', 'Taylor', '500001', '15 Abids Road, Hyderabad'),
+(11, 'Amit', 'Kumar', '122001', '221 Cyber City, Gurugram'),
+(12, 'Neha', 'Gupta', '411001', '67 FC Road, Pune'),
+(13, 'Chris', 'Anderson', '641001', '11 Avinashi Road, Coimbatore'),
+(14, 'Sophia', 'Thomas', '682001', '19 MG Road, Kochi'),
+(15, 'Daniel', 'Jackson', '751001', '54 Janpath, Bhubaneswar'),
+(16, 'Riya', ' Mehta ', '360001', '   14 Race Course Road   '),
+(17, 'Arjun', 'Singh', '201301', 'Flat-302, Sector 62, Noida'),
+(18, 'Mary Ann', 'Lewis', '160017', 'House No. 45, Sector-17'),
+(19, '  Kevin', 'Walker', '462001', 'Near City Mall'),
+(20, 'Olivia', NULL, '800001', 'Fraser Road, Patna');
+
+
+-- Concat ( combines multiple strings into one )
+-- combine first name and last name and show the output
+
+select 
+concat(first_name, " " ,last_name) as full_name
+from customer_addresses;
+
+-- UPPER AND LOWER
+
+select 
+lower(first_name) low_name, upper(last_name) as up_name
+from customer_addresses;
+
+-- TRIM
+-- Removes all leading and trailing spaces
+
+-- find all the customers whose first name/last_name has any leading or trailing spaces
+
+select *
+from customer_addresses
+where first_name != TRIM(first_name) or last_name!= TRIM(last_name);
+
+
+-- REPLACE
+-- replaces specific character with a new specified character
+
+select 
+replace(address ," ", "-") as new_address
+from customer_addresses;
+
+-- LEN
+-- calculate the length of each customers fullname
+
+select 
+length(concat(first_name, last_name)) as Length_name
+from customer_addresses;
+
+
+-- LEFT AND RIGHT
+-- extracts specific number of characters from start and end
+
+select 
+left (first_name , 3),
+right(last_name, 3)
+from customer_addresses;
+
+-- SUBSTRING
+-- extracts a part of string at a spcific position
+
+select 
+substring(first_name, 2, 2)
+from customer_addresses;
+	
+
+
+
+
+
+
+
