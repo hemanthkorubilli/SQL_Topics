@@ -1,0 +1,41 @@
+use Multiplejoins;
+
+-- UNION
+-- Combine data from customers and employees?
+select customer_id , customer_name
+from customers
+Union
+Select employee_id , employee_name
+from employees;
+
+-- UNION ALL 
+-- gives all the results from both queries.
+
+select customer_id , customer_name
+from customers
+Union all
+Select employee_id , employee_name
+from employees;
+
+-- Except
+-- returns all the distinct rows from first query that are not found in second query
+
+select customer_id , customer_name
+from customers
+except
+Select employee_id , employee_name
+from employees;
+
+-- INTERSECT
+-- returns all the common values in both the queries
+
+select customer_id , customer_name
+from customers
+intersect
+Select employee_id , employee_name
+from employees;
+
+
+
+
+
