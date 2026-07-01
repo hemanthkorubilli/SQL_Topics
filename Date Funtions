@@ -1,0 +1,120 @@
+create database Date_functions;
+use date_functions;
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    order_date DATE,
+    order_time TIME,
+    order_datetime DATETIME,
+    created_at TIMESTAMP
+);
+
+INSERT INTO orders
+(order_id, customer_name, order_date, order_time, order_datetime, created_at)
+VALUES
+(101, 'John Smith', '2024-01-15', '09:30:15', '2024-01-15 09:30:15', '2024-01-15 09:30:15'),
+(102, 'Emily Johnson', '2024-02-20', '14:45:30', '2024-02-20 14:45:30', '2024-02-20 14:45:30'),
+(103, 'Rahul Patel', '2024-03-05', '18:10:45', '2024-03-05 18:10:45', '2024-03-05 18:10:45'),
+(104, 'Priya Sharma', '2024-04-12', '11:20:00', '2024-04-12 11:20:00', '2024-04-12 11:20:00'),
+(105, 'David Wilson', '2024-05-30', '16:55:25', '2024-05-30 16:55:25', '2024-05-30 16:55:25'),
+(106, 'Sarah Davis', '2024-06-18', '08:15:10', '2024-06-18 08:15:10', '2024-06-18 08:15:10'),
+(107, 'Amit Kumar', '2024-07-22', '19:40:35', '2024-07-22 19:40:35', '2024-07-22 19:40:35'),
+(108, 'Neha Gupta', '2024-08-14', '13:05:50', '2024-08-14 13:05:50', '2024-08-14 13:05:50'),
+(109, 'Michael Brown', '2024-09-09', '10:25:45', '2024-09-09 10:25:45', '2024-09-09 10:25:45'),
+(110, 'Jessica Taylor', '2024-10-31', '22:50:20', '2024-10-31 22:50:20', '2024-10-31 22:50:20'),
+(111, 'Chris Anderson', '2024-11-11', '07:45:15', '2024-11-11 07:45:15', '2024-11-11 07:45:15'),
+(112, 'Sophia Thomas', '2024-12-25', '23:59:59', '2024-12-25 23:59:59', '2024-12-25 23:59:59'),
+(113, 'Daniel Jackson', '2025-01-01', '00:00:01', '2025-01-01 00:00:01', '2025-01-01 00:00:01'),
+(114, 'Riya Mehta', '2025-02-14', '15:30:45', '2025-02-14 15:30:45', '2025-02-14 15:30:45'),
+(115, 'Kevin Walker', '2025-03-28', '12:10:30', '2025-03-28 12:10:30', '2025-03-28 12:10:30');
+
+
+-- DAY,MONTH,YEAR FUNCTIONS
+
+select order_id , customer_name,
+year(order_date) as Ordered_year,
+month(order_date) as Ordered_month,
+Day(order_date) as Ordered_day
+from orders;
+
+-- DATEPART
+
+select order_id , customer_name,
+datepart(year, order_date) as year
+from orders;
+
+-- Dayname and Monthname
+select order_id , customer_name,
+monthname(order_date) as month,
+dayname(order_date) as day
+from orders;
+
+-- Datetrunc
+
+select order_id , customer_name,
+datetrunc(month, order_date) as year
+from orders; # gives output timestamp till month and day,time will be displayed as 0's.
+
+-- EOMONTH
+-- returns the end day of the month
+
+select order_id , customer_name,
+EOMONTH(order_date) as year
+from orders;
+
+-- question
+-- how many orderes are placed in each year
+
+select year(order_date),
+count(order_id) as Total_Orders
+from orders
+group by year(order_date);
+
+-- how many orders are placed in each month
+
+select monthname(order_date),
+count(order_id)
+from orders
+group by monthname(order_date);
+
+-- show all the order details from 2nd month
+
+select *
+from orders
+where month(order_date) = 2;
+
+-- FORMAT
+-- formats date and time
+
+select order_id,
+	   order_time,
+       date_format(order_date , '%d' ) as Day,
+       date_format(order_date, '%m') as Month,
+       date_format(order_date, '%y') as Year,
+       date_format(order_date , '%W' ) as Day,
+       date_format(order_date, '%M') as Month,
+       date_format(order_date, '%y') as Year
+from orders;
+
+-- convert()
+
+-- DATEADD
+-- adds or subtracts date 
+-- in mysql it is DATE_ADD(date , interval number)
+select order_date,
+DATE_ADD(order_date, interval 2 year)
+from orders;
+
+select order_date,
+DATE_ADD(order_date, interval -2 year)
+from orders;
+
+
+-- DATEDIFF(part , start_date , end_date) in mysql it is timestampdiff(part , start_date , end_date)
+-- for days difference we can use DATEDIFF() for mysql too
+-- finds the difference between 2 dates 
+
+SELECT timestampdIFF(day,shipped_date, order_date)
+FROM orders;
+
